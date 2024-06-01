@@ -145,8 +145,5 @@ dmypy.json
 
 .mypy_cache
 
-# Data with transactions
-data/
-
 # Others
 node_modules
