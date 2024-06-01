@@ -1,0 +1,721 @@
+{% extends 'index.html' %} {% load static %} {% block content %} {% include 'base/navbar.html' %}
+<!-- <h1 style="text-align: center; margin-bottom: 2rem">Real Estate Trends</h1> -->
+
+<!-- <h1>Area Name: {}</h1> -->
+<div style="margin-top: 5rem">
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-3">
+        <form id="form" method="GET" class="border p-3 sticky-top">
+          <div class="container mb-3" id="charts-title">
+            <i class="fa fa-home" aria-hidden="true" id="home-icon"></i>
+            Choose attributes
+            <i
+              class="fa fa-refresh"
+              aria-hidden="true"
+              id="refresh-icon"
+              onclick="refreshFilters()"
+            ></i>
+          </div>
+          {% csrf_token %} {% for form_item in form %}
+          <div>{{ form_item }}</div>
+          <br />
+          {% endfor %}
+        </form>
+      </div>
+
+      <div class="col-9">
+        <div id="no-data"></div>
+        <div id="available-data">
+          <div class="container" id="bar-chart">
+            <div class="card">
+              <div class="card-body pb-5">
+                <div class="row mb-3">
+                  <div class="col-6">
+                    <div class="container" id="charts-title">
+                      <p class="text-start" id="title_bar">Last 10 transactions in Dubai</p>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div id="dialog_community" title="Please choose a Community">
+                      <p>Please select a Community name in the left search bar</p>
+                    </div>
+                    <div id="dialog_project" title="Please choose a Project Name">
+                      <p>Please select a Project name in the left search bar</p>
+                    </div>
+                    <div id="dialog_type" title="Please choose a Property Type">
+                      <p>Please select a Property type in the left search bar</p>
+                    </div>
+                    <div class="container text-end">
+                      <a
+                        href="{% url 'all-transactions' %}"
+                        class="btn btn-primary"
+                        id="all_transactions_button"
+                      >
+                        See all transactions >>>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <canvas id="myChartbar"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="container mt-3" id="charts-title">
+        Price for {sqm} dynamics for {last year}
+      </div> -->
+
+          <div class="container mt-5 mb-5 pe-3" id="line-chart">
+            <div class="card">
+              <div class="card-body pb-5">
+                <div class="row mb-3">
+                  <div class="col-8">
+                    <div class="container" id="charts-title">
+                      <p class="text-start">Price/sqm dynamics (AED)</p>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="container">
+                      <select
+                        id="time_period_form"
+                        class="form-select form-select-sm"
+                        onchange="getTimePeriod()"
+                      >
+                        <option selected value="1Y">Last 1 year</option>
+                        <option value="YTD" id="YTD">YTD</option>
+                        <option value="5Y" id="5Y">Last 5 years</option>
+                        <option value="All" id="All">All</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <canvas id="myChartline"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Drop Down Script
+  $('select').on('change', function () {
+    if ($(this).val()) {
+      $(this).addClass('selected_item')
+      $(this).find(':selected').addClass('selected_item_font')
+    } else {
+      $(this).removeClass('selected_item')
+    }
+  })
+
+  $('#id_master_project').on('change', function () {
+    if (!$(this).val()) {
+      $('#id_project_name').removeClass('selected_item')
+      $('#id_building_name').removeClass('selected_item')
+    }
+  })
+
+  $('#id_project_name').on('change', function () {
+    if (!$(this).val()) {
+      $('#id_building_name').removeClass('selected_item')
+    }
+  })
+
+  $('#id_property_type').on('change', function () {
+    if (!$(this).val()) {
+      $('#id_rooms_number').removeClass('selected_item')
+    }
+  })
+
+  $(document).ready(function () {
+    $('#id_master_project').select2()
+    $('#id_master_project').on('select2:select', (e) => {
+      htmx.trigger('#id_master_project', 'select2.select')
+    })
+  })
+
+  function mousePointer(e) {
+    let $canvas = document.getElementById('refresh-icon')
+    $canvas.addEventListener('mouseover', function (e) {
+      if (e.ctrlKey) {
+        $canvas.style.cursor = 'none'
+      } else {
+        $canvas.style.cursor = 'pointer'
+      }
+    })
+  }
+
+  mousePointer()
+
+  function refreshFilters() {
+    location.reload()
+  }
+  window.history.replaceState(null, '', '/')
+
+  // Button with alerts
+
+  $('#dialog_community').hide()
+  $('#dialog_project').hide()
+  $('#dialog_type').hide()
+  $('#all_transactions_button').on('click', function (e) {
+    let target = $(this)
+    let url = new URL(window.location.href)
+    let selectedMasterProject = url.searchParams.get('master_project')
+    let selectedProjectName = url.searchParams.get('project_name')
+    let selectedPropertyType = url.searchParams.get('property_type')
+    if (selectedMasterProject == null) {
+      $('#dialog_community').dialog({
+        height: 70,
+        width: 350,
+        modal: true,
+        resizable: false,
+        dialogClass: 'alert-dialog',
+        position: {
+          my: 'center',
+          at: 'center',
+          of: target,
+        },
+      })
+      e.preventDefault()
+      // alert('Please Choose a Community')
+    } else if (selectedProjectName == null) {
+      $('#dialog_project').dialog({
+        height: 70,
+        width: 350,
+        modal: true,
+        resizable: false,
+        dialogClass: 'alert-dialog',
+        position: {
+          my: 'center',
+          at: 'right',
+          of: target,
+        },
+      })
+      e.preventDefault()
+    } else if (selectedPropertyType == null) {
+      $('#dialog_type').dialog({
+        height: 70,
+        width: 350,
+        modal: true,
+        resizable: false,
+        dialogClass: 'alert-dialog',
+        position: {
+          my: 'center',
+          at: 'right',
+          of: target,
+        },
+      })
+      e.preventDefault()
+    }
+  })
+
+  // Home Page
+  getHomePage()
+
+  function getHomePage() {
+    let url = new URL(window.location.href)
+    if (url.searchParams.size === 0) {
+      $.ajax({
+        method: 'GET',
+        url: 'http://127.0.0.1:8000',
+        data: {
+          master_project: null,
+          project_name: null,
+          building_name: null,
+          property_type: null,
+          rooms_number: null,
+          time_period: null,
+        },
+        xhrFields: {
+          withCredentials: true,
+        },
+        async: false,
+        cache: false,
+        success: $.ajax({
+          method: 'GET',
+          data: {
+            master_project: null,
+            project_name: null,
+            building_name: null,
+            property_type: null,
+            rooms_number: null,
+            time_period: null,
+          },
+          url: "{% url 'ajax_url' %}",
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (data) {
+            console.log(data.master_project)
+            console.log(data.project_name)
+            console.log(data.building_name)
+            console.log(data.property_type)
+            console.log(data.rooms_number)
+            console.log(data.time_period)
+          },
+          error: function (error_data) {
+            console.log(error_data)
+          },
+        }),
+      })
+
+      if (selectedChart) {
+        selectedChart.destroy()
+      }
+      if (selectedBar) {
+        selectedBar.destroy()
+      }
+
+      load_graph_data()
+      load_bar_data()
+    }
+  }
+
+  function getProjectName() {
+    let masterProject = document.getElementById('id_master_project')
+
+    let selectedMasterProject = masterProject.value
+
+    let masterProjectIndex = masterProject.selectedIndex
+    let selectedMasterProjectName = masterProject.options[masterProjectIndex].text
+    let titleBar = document.getElementById('title_bar')
+
+    if (selectedMasterProjectName && selectedMasterProjectName !== 'Community') {
+      titleBar.innerHTML = `Last 10 transactions in ${selectedMasterProjectName}`
+    } else {
+      titleBar.innerHTML = 'Last 10 transactions in Dubai'
+    }
+
+    let url = new URL(window.location.href)
+    if (selectedMasterProject.length > 0) {
+      url.searchParams.set('master_project', selectedMasterProject)
+    } else {
+      document.getElementById('id_building_name').options.length = 0
+      document.getElementById('id_building_name').options[0] = new Option('Choose Building Name')
+      url.searchParams.delete('building_name')
+      url.searchParams.delete('project_name')
+      url.searchParams.delete('master_project')
+    }
+
+    history.pushState({}, '', url.href)
+
+    // let selectedMasterProject = url.searchParams.get('master_project')
+    let selectedProjectName = url.searchParams.get('project_name')
+    let selectedBuildingName = url.searchParams.get('building_name')
+    let selectedPropertyType = url.searchParams.get('property_type')
+    let selectedRoomsNumber = url.searchParams.get('rooms_number')
+    let selectedTimePeriod = url.searchParams.get('time_period')
+
+    $.ajax({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000',
+      data: {
+        master_project: selectedMasterProject,
+        project_name: selectedProjectName,
+        building_name: selectedBuildingName,
+        property_type: selectedPropertyType,
+        rooms_number: selectedRoomsNumber,
+        time_period: selectedTimePeriod,
+      },
+      xhrFields: {
+        withCredentials: true,
+      },
+      async: false,
+      cache: false,
+      success: $.ajax({
+        method: 'GET',
+        data: {
+          master_project: selectedMasterProject,
+          project_name: selectedProjectName,
+          building_name: selectedBuildingName,
+          property_type: selectedPropertyType,
+          rooms_number: selectedRoomsNumber,
+          time_period: selectedTimePeriod,
+        },
+        url: "{% url 'ajax_url' %}",
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (data) {
+          console.log(data.master_project)
+          console.log(data.project_name)
+          console.log(data.building_name)
+          console.log(data.property_type)
+          console.log(data.rooms_number)
+        },
+        error: function (error_data) {
+          console.log(error_data)
+        },
+      }),
+    })
+
+    // element.scrollTop = position
+
+    if (selectedChart) {
+      selectedChart.destroy()
+    }
+    if (selectedBar) {
+      selectedBar.destroy()
+    }
+
+    load_graph_data()
+    load_bar_data()
+  }
+
+  function getBuildingName() {
+    let selectedProjectName = document.getElementById('id_project_name').value
+    let url = new URL(window.location.href)
+    if (selectedProjectName.length > 0) {
+      url.searchParams.set('project_name', selectedProjectName)
+    } else {
+      url.searchParams.delete('building_name')
+      url.searchParams.delete('project_name')
+    }
+
+    history.pushState({}, '', url.href)
+
+    let selectedMasterProject = url.searchParams.get('master_project')
+    // let selectedProjectName = url.searchParams.get('project_name')
+    let selectedBuildingName = url.searchParams.get('building_name')
+    let selectedPropertyType = url.searchParams.get('property_type')
+    let selectedRoomsNumber = url.searchParams.get('rooms_number')
+    let selectedTimePeriod = url.searchParams.get('time_period')
+
+    $.ajax({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000',
+      data: {
+        master_project: selectedMasterProject,
+        project_name: selectedProjectName,
+        building_name: selectedBuildingName,
+        property_type: selectedPropertyType,
+        rooms_number: selectedRoomsNumber,
+        time_period: selectedTimePeriod,
+      },
+      xhrFields: {
+        withCredentials: true,
+      },
+      async: false,
+      cache: false,
+      success: $.ajax({
+        method: 'GET',
+        data: {
+          master_project: selectedMasterProject,
+          project_name: selectedProjectName,
+          building_name: selectedBuildingName,
+          property_type: selectedPropertyType,
+          rooms_number: selectedRoomsNumber,
+          time_period: selectedTimePeriod,
+        },
+        url: "{% url 'ajax_url' %}",
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (data) {
+          console.log(data.master_project)
+          console.log(data.project_name)
+          console.log(data.building_name)
+          console.log(data.property_type)
+          console.log(data.rooms_number)
+        },
+        error: function (error_data) {
+          console.log(error_data)
+        },
+      }),
+    })
+
+    if (selectedChart) {
+      selectedChart.destroy()
+    }
+    if (selectedBar) {
+      selectedBar.destroy()
+    }
+
+    // console.log('$$$$$$$')
+    // console.log(data)
+    load_graph_data()
+    load_bar_data()
+  }
+
+  function listBuildingName() {
+    let selectedBuildingName = document.getElementById('id_building_name').value
+    let url = new URL(window.location.href)
+    url.searchParams.set('building_name', selectedBuildingName)
+    history.pushState({}, '', url.href)
+
+    let selectedMasterProject = url.searchParams.get('master_project')
+    let selectedProjectName = url.searchParams.get('project_name')
+    // let selectedBuildingName = url.searchParams.get('building_name')
+    let selectedPropertyType = url.searchParams.get('property_type')
+    let selectedRoomsNumber = url.searchParams.get('rooms_number')
+    let selectedTimePeriod = url.searchParams.get('time_period')
+
+    $.ajax({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000',
+      data: {
+        master_project: selectedMasterProject,
+        project_name: selectedProjectName,
+        building_name: selectedBuildingName,
+        property_type: selectedPropertyType,
+        rooms_number: selectedRoomsNumber,
+        time_period: selectedTimePeriod,
+      },
+      xhrFields: {
+        withCredentials: true,
+      },
+      async: false,
+      cache: false,
+      success: $.ajax({
+        method: 'GET',
+        data: {
+          master_project: selectedMasterProject,
+          project_name: selectedProjectName,
+          building_name: selectedBuildingName,
+          property_type: selectedPropertyType,
+          rooms_number: selectedRoomsNumber,
+          time_period: selectedTimePeriod,
+        },
+        url: "{% url 'ajax_url' %}",
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (data) {
+          console.log(data.master_project)
+          console.log(data.project_name)
+          console.log(data.building_name)
+          console.log(data.property_type)
+          console.log(data.rooms_number)
+        },
+        error: function (error_data) {
+          console.log(error_data)
+        },
+      }),
+    })
+
+    if (selectedChart) {
+      selectedChart.destroy()
+    }
+    if (selectedBar) {
+      selectedBar.destroy()
+    }
+
+    load_graph_data()
+    load_bar_data()
+  }
+
+  function getRoomsNumber() {
+    let selectedPropertyType = document.getElementById('id_property_type').value
+    let url = new URL(window.location.href)
+    console.log(selectedPropertyType.length)
+    if (selectedPropertyType.length > 0) {
+      url.searchParams.set('property_type', selectedPropertyType)
+    } else {
+      url.searchParams.delete('rooms_number')
+      url.searchParams.delete('property_type')
+    }
+    history.pushState({}, '', url.href)
+
+    let selectedMasterProject = url.searchParams.get('master_project')
+    let selectedProjectName = url.searchParams.get('project_name')
+    let selectedBuildingName = url.searchParams.get('building_name')
+    // let selectedPropertyType = url.searchParams.get('property_type')
+    let selectedRoomsNumber = url.searchParams.get('rooms_number')
+    let selectedTimePeriod = url.searchParams.get('time_period')
+
+    $.ajax({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000',
+      data: {
+        master_project: selectedMasterProject,
+        project_name: selectedProjectName,
+        building_name: selectedBuildingName,
+        property_type: selectedPropertyType,
+        rooms_number: selectedRoomsNumber,
+        time_period: selectedTimePeriod,
+      },
+      xhrFields: {
+        withCredentials: true,
+      },
+      async: false,
+      cache: false,
+      success: $.ajax({
+        method: 'GET',
+        data: {
+          master_project: selectedMasterProject,
+          project_name: selectedProjectName,
+          building_name: selectedBuildingName,
+          property_type: selectedPropertyType,
+          rooms_number: selectedRoomsNumber,
+          time_period: selectedTimePeriod,
+        },
+        url: "{% url 'ajax_url' %}",
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (data) {
+          console.log(data.master_project)
+          console.log(data.project_name)
+          console.log(data.building_name)
+          console.log(data.property_type)
+          console.log(data.rooms_number)
+        },
+        error: function (error_data) {
+          console.log(error_data)
+        },
+      }),
+    })
+
+    if (selectedChart) {
+      selectedChart.destroy()
+    }
+    if (selectedBar) {
+      selectedBar.destroy()
+    }
+
+    load_graph_data()
+    load_bar_data()
+  }
+
+  function listRoomsNumber() {
+    let selectedRoomsNumber = document.getElementById('id_rooms_number').value
+    let url = new URL(window.location.href)
+    url.searchParams.set('rooms_number', selectedRoomsNumber)
+    history.pushState({}, '', url.href)
+
+    let selectedMasterProject = url.searchParams.get('master_project')
+    let selectedProjectName = url.searchParams.get('project_name')
+    let selectedBuildingName = url.searchParams.get('building_name')
+    let selectedPropertyType = url.searchParams.get('property_type')
+    // let selectedRoomsNumber = url.searchParams.get('rooms_number')
+    let selectedTimePeriod = url.searchParams.get('time_period')
+
+    $.ajax({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000',
+      data: {
+        master_project: selectedMasterProject,
+        project_name: selectedProjectName,
+        building_name: selectedBuildingName,
+        property_type: selectedPropertyType,
+        rooms_number: selectedRoomsNumber,
+        time_period: selectedTimePeriod,
+      },
+      xhrFields: {
+        withCredentials: true,
+      },
+      async: false,
+      cache: false,
+      success: $.ajax({
+        method: 'GET',
+        data: {
+          master_project: selectedMasterProject,
+          project_name: selectedProjectName,
+          building_name: selectedBuildingName,
+          property_type: selectedPropertyType,
+          rooms_number: selectedRoomsNumber,
+          time_period: selectedTimePeriod,
+        },
+        url: "{% url 'ajax_url' %}",
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (data) {
+          console.log(data.master_project)
+          console.log(data.project_name)
+          console.log(data.building_name)
+          console.log(data.property_type)
+          console.log(data.rooms_number)
+        },
+        error: function (error_data) {
+          console.log(error_data)
+        },
+      }),
+    })
+
+    if (selectedChart) {
+      selectedChart.destroy()
+    }
+    if (selectedBar) {
+      selectedBar.destroy()
+    }
+
+    load_graph_data()
+    load_bar_data()
+  }
+
+  function getTimePeriod() {
+    let selectedTimePeriod = document.getElementById('time_period_form').value
+    let url = new URL(window.location.href)
+    url.searchParams.set('time_period', selectedTimePeriod)
+    history.pushState({}, '', url.href)
+
+    let selectedMasterProject = url.searchParams.get('master_project')
+    let selectedProjectName = url.searchParams.get('project_name')
+    let selectedBuildingName = url.searchParams.get('building_name')
+    let selectedPropertyType = url.searchParams.get('property_type')
+    let selectedRoomsNumber = url.searchParams.get('rooms_number')
+    // let selectedTimePeriod = url.searchParams.get('time_period')
+
+    $.ajax({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000',
+      data: {
+        master_project: selectedMasterProject,
+        project_name: selectedProjectName,
+        building_name: selectedBuildingName,
+        property_type: selectedPropertyType,
+        rooms_number: selectedRoomsNumber,
+        time_period: selectedTimePeriod,
+      },
+      xhrFields: {
+        withCredentials: true,
+      },
+      async: false,
+      cache: false,
+      success: $.ajax({
+        method: 'GET',
+        data: {
+          master_project: selectedMasterProject,
+          project_name: selectedProjectName,
+          building_name: selectedBuildingName,
+          property_type: selectedPropertyType,
+          rooms_number: selectedRoomsNumber,
+          time_period: selectedTimePeriod,
+        },
+        url: "{% url 'ajax_url' %}",
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (data) {
+          console.log(data.master_project)
+          console.log(data.project_name)
+          console.log(data.building_name)
+          console.log(data.property_type)
+          console.log(data.rooms_number)
+          console.log(data.time_period)
+        },
+        error: function (error_data) {
+          console.log(error_data)
+        },
+      }),
+    })
+
+    if (selectedChart) {
+      selectedChart.destroy()
+    }
+    if (selectedBar) {
+      selectedBar.destroy()
+    }
+
+    load_graph_data()
+    load_bar_data()
+  }
+</script>
+
+{% include 'base/chart.html' %} {% endblock content %}

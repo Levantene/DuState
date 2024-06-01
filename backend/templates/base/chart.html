@@ -1,0 +1,431 @@
+<script>
+  Chart.defaults.font.family = 'Roboto'
+  Chart.defaults.font.size = 12
+  Chart.register(ChartDataLabels)
+
+  const monthHash = {
+    0: 'Jan',
+    1: 'Feb',
+    2: 'Mar',
+    3: 'Apr',
+    4: 'May',
+    5: 'Jun',
+    6: 'Jul',
+    7: 'Aug',
+    8: 'Sep',
+    9: 'Oct',
+    10: 'Nov',
+    11: 'Dec',
+  }
+
+  function load_graph_data() {
+    $.ajax({
+      method: 'GET',
+      url: "{% url 'line-data' %}",
+      xhrFields: {
+        withCredentials: true,
+      },
+      success: function (data) {
+        selectedChart = drawLineGraph(data, 'myChartline')
+      },
+      error: function (error_data) {
+        console.log(error_data)
+      },
+    })
+
+    function drawLineGraph(data, id) {
+      let labels = data.dates
+      let chartLabel = 'Price/sqm (AED)'
+      let chartdata = data.prices_per_sqm
+
+      // const footer_label = (tooltipItem) => {
+      //   label = tooltipItem.formattedValue
+      //   console.log(label)
+      //   return label
+      // }
+
+      const footer = (tooltipItems) => {
+        let transactions_numbers = data.transactions_number
+        tooltipItems.forEach(function (tooltipItem) {
+          transactions_number = transactions_numbers[tooltipItem.dataIndex]
+            .toFixed(0)
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        })
+        return `# of Transactions: ${transactions_number}`
+      }
+
+      const ctx = document.getElementById(id).getContext('2d')
+      const chart = new Chart(ctx, {
+        plugins: [
+          [ChartDataLabels],
+          {
+            beforeInit: function (chart, options) {
+              const originalFit = chart.legend.fit
+              chart.legend.fit = function fit() {
+                originalFit.bind(chart.legend)()
+                this.height += 35
+              }
+            },
+          },
+        ],
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              datalabels: {
+                anchor: 'end',
+                align: 'top',
+                font: 'Roboto',
+                size: 10,
+                formatter: function (value, context) {
+                  return value
+                    .toFixed(0)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                },
+              },
+              label: chartLabel,
+              // backgroundColor: 'rgb(255, 100, 200)',
+              // borderColor: 'rgb(55, 99, 132)',
+              data: chartdata,
+              hoverBackgroundColor: 'green',
+            },
+          ],
+        },
+
+        // Configuration options go here
+        options: {
+          borderWidth: 1,
+          hoverBackgroundColor: 'green',
+          elements: {
+            line: {
+              tension: 0.2, // smooth lines
+            },
+            point: {
+              radius: 3,
+            },
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'start',
+              maxSize: {
+                height: 200,
+              },
+              margin: 10,
+
+              labels: {
+                // padding: 50,
+                // This more specific font property overrides the global property
+                font: {
+                  size: 12,
+                  family: 'Roboto',
+                },
+              },
+            },
+            tooltip: {
+              titleColor: 'green',
+              callbacks: {
+                // label: footer_label,
+                footer: footer,
+              },
+            },
+          },
+
+          layout: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+
+          scales: {
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto',
+                },
+                // callback: (value, index, values) => {
+                //   dates = data.dates
+                //   month_year = dates.map((date) => {
+                //     date = new Date(date)
+                //     year = date.getFullYear().toString().substr(-2)
+                //     month = monthHash[date.getMonth()]
+                //     return `${month}-${year}`
+                //   })
+                //   return `${month_year[index]}`
+                // },
+              },
+              // type: 'time',
+              // time: {
+              //   unit: 'day',
+              //   // parser: 'yyyy-mm-dd',
+              // },
+            },
+          },
+          y: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              font: {
+                size: 10,
+                family: 'Roboto',
+              },
+              color: 'light grey',
+            },
+          },
+        },
+      })
+      return chart
+    }
+  }
+
+  function load_bar_data() {
+    $.ajax({
+      method: 'GET',
+      url: "{% url 'bar-data' %}",
+      xhrFields: {
+        withCredentials: true,
+      },
+      success: function (data) {
+        selectedBar = drawBarGraph(data, 'myChartbar')
+      },
+      error: function (error_data) {
+        console.log(error_data)
+      },
+    })
+
+    function drawBarGraph(data, id) {
+      const yesData = document.getElementById('available-data')
+      const noData = document.getElementById('no-data')
+      if (data.building_names.length === 0) {
+        yesData.style.display = 'none'
+        noData.style.display = 'block'
+
+        noData.innerHTML =
+          '<div class="container"><div class="card"><div class="card-body" id="no-data-card"><p class="text-start pd-5">We currently have no properties matching your search. You could try the following Change the location</p></div></div></div>'
+        // let container_div = document.createElement('div')
+        // container_div.classList.add('container')
+
+        // let card_div = document.createElement('div')
+        // card_div.classList.add('card')
+
+        // let card_body_div = document.createElement('div')
+        // card_body_div.classList.add('card-body')
+        // card_body_div.setAttribute('id', 'no-data-card')
+
+        // let p_text = document.createElement('p')
+        // card_body_div.classList.add('text-start', 'pd-5')
+        // const noDataText = document.createTextNode(
+        //   'We currently have no properties matching your search. You could try the following Change the location'
+        // )
+        // p_text.appendChild(noDataText)
+
+        // card_body_div.appendChild(p_text)
+        // card_div.appendChild(card_body_div)
+        // container_div.appendChild(card_div)
+        // noData.appendChild(container_div)
+      } else {
+        noData.style.display = 'none'
+        yesData.style.display = 'block'
+
+        let labels = data.project_names
+        let chartLabel = 'Transaction Price (AED)'
+        let chartdata = data.prices
+
+        // const ticks = (value, index, values) => {
+        //   return new Intl.NumberFormat('en-US', {
+        //     style: 'currency',
+        //     currency: '$',
+        //   }).format(value)
+        // }
+
+        // const dateTicks = (ticks) => {
+        //   let dates = data.dates
+        //   console.log(dates)
+
+        //   // ticks.forEach(function (tick) {
+        //   //   console.log(tick)
+        //   //   date = dates[tooltipItem.dataIndex]
+        //   // })
+        //   return `${dates}`
+        // }
+
+        const footer_title = (tooltipItem) => {
+          label = tooltipItem[0].label
+          const reWhiteSpace = new RegExp(', ')
+          if (reWhiteSpace.test(label)) {
+            label = label.split(', ')
+          }
+          label = label.split(',').join(' ')
+          return label
+        }
+
+        const footer = (tooltipItems) => {
+          let master_projects = data.master_projects
+          let building_names = data.building_names
+          let types = data.types
+          let sizes = data.sizes
+          let rooms_numbers = data.rooms_number
+          let prices = data.prices
+          let dates = data.dates
+
+          tooltipItems.forEach(function (tooltipItem) {
+            master_project = master_projects[tooltipItem.dataIndex]
+            building_name = building_names[tooltipItem.dataIndex]
+            date = dates[tooltipItem.dataIndex]
+            date = new Date(date)
+            year = date.getFullYear().toString().substr(-2)
+            month = monthHash[date.getMonth()]
+            type = types[tooltipItem.dataIndex]
+            size = sizes[tooltipItem.dataIndex].toFixed(0)
+            rooms_number = rooms_numbers[tooltipItem.dataIndex]
+            price = prices[tooltipItem.dataIndex]
+            prices_per_sqm = (price / size).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+          })
+          return `${master_project}\nDate: ${month}-${year}\nType: ${type} (${rooms_number})\nSize:  ${size} sqm\nPrice/sqm:  ${prices_per_sqm} AED`
+        }
+
+        const ctx = document.getElementById(id).getContext('2d')
+
+        const bar = new Chart(ctx, {
+          plugins: [
+            [ChartDataLabels],
+            {
+              beforeInit: function (chart, options) {
+                const originalFit = chart.legend.fit
+                chart.legend.fit = function fit() {
+                  originalFit.bind(chart.legend)()
+                  this.height += 35
+                }
+              },
+            },
+
+            {
+              beforeInit: function (chart) {
+                chart.data.labels.forEach(function (e, i, a) {
+                  const reWhiteSpace = new RegExp(' ')
+                  if (reWhiteSpace.test(e)) {
+                    a[i] = e.split(' ')
+                  }
+                })
+              },
+            },
+          ],
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                datalabels: {
+                  anchor: 'end',
+                  align: 'top',
+                  font: 'Roboto',
+                  size: 10,
+                  formatter: function (value, context) {
+                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                  },
+                },
+                label: chartLabel,
+                // backgroundColor: 'rgb(255, 100, 200)',
+                // borderColor: 'rgb(55, 99, 132)',
+                data: chartdata,
+                borderRadius: 5,
+                barPercentage: 0.7,
+                hoverBackgroundColor: 'green',
+              },
+            ],
+          },
+
+          // Configuration options go here
+          options: {
+            plugins: {
+              legend: {
+                position: 'top',
+                align: 'start',
+                maxSize: {
+                  height: 200,
+                },
+                margin: 10,
+
+                labels: {
+                  // padding: 50,
+                  // This more specific font property overrides the global property
+                  font: {
+                    size: 12,
+                    family: 'Roboto',
+                  },
+                  boxWidth: 25,
+                  useBorderRadius: true,
+                  borderRadius: 4,
+                },
+              },
+
+              tooltip: {
+                titleColor: 'green',
+                callbacks: {
+                  title: footer_title,
+                  footer: footer,
+                },
+              },
+            },
+
+            layout: {
+              responsive: true,
+              maintainAspectRatio: false,
+            },
+
+            scales: {
+              x: {
+                grid: {
+                  display: false,
+                },
+                ticks: {
+                  font: {
+                    size: 10,
+                    family: 'Roboto',
+                  },
+                  // callback: (value, index, values) => {
+                  //   dates = data.dates
+                  //   month_year = dates.map((date) => {
+                  //     date = new Date(date)
+                  //     year = date.getFullYear().toString().substr(-2)
+                  //     month = monthHash[date.getMonth()]
+                  //     return `${month}-${year}`
+                  //   })
+                  //   return `${month_year[index]}`
+                  // },
+                },
+                // type: 'time',
+                // time: {
+                //   unit: 'day',
+                //   // parser: 'yyyy-mm-dd',
+                // },
+              },
+            },
+            y: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                font: {
+                  size: 10,
+                  family: 'Roboto',
+                },
+                color: 'light grey',
+              },
+            },
+          },
+        })
+        return bar
+      }
+    }
+  }
+
+  load_graph_data()
+  load_bar_data()
+</script>

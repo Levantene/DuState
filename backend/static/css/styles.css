@@ -1,0 +1,135 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  padding: 0;
+  background-color: #eaedf4;
+}
+
+.card-title:hover,
+.img-fluid:hover,
+#title-site:hover {
+  opacity: 0.5;
+}
+
+#navbarSupportedContent ul li a:hover {
+  opacity: 0.5;
+}
+
+#categories,
+#blog-post {
+  background-color: #eaedf4;
+}
+
+.border {
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-top {
+  top: 5rem;
+}
+
+#charts-title {
+  color: rgb(99, 99, 99);
+}
+
+#home-icon {
+  margin-right: 0.5em;
+}
+#refresh-icon {
+  margin-left: 1.5em;
+}
+
+#myChartLine,
+#myChartBar {
+  width: '100%';
+  height: '50%';
+}
+
+/*alert dialog*/
+.ui-widget.alert-dialog {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8em;
+}
+
+.ui-widget-content.alert-dialog {
+  background: #f9f9f9;
+  border: 1px solid #28a745;
+  color: #222222;
+}
+
+.ui-dialog.alert-dialog {
+  left: 0;
+  outline: 0 none;
+  padding: 0 !important;
+  position: absolute;
+  top: 0;
+}
+
+.ui-dialog.alert-dialog .ui-dialog-content {
+  background: none repeat scroll 0 0 transparent;
+  border: 0 none;
+  overflow: auto;
+  position: relative;
+  padding: 5px !important;
+  margin: 0;
+}
+
+.ui-dialog.alert-dialog .ui-widget-header {
+  background: #28a745;
+  border: 0;
+  color: #fff;
+  font-weight: normal;
+}
+
+.ui-dialog.alert-dialog .ui-dialog-titlebar {
+  padding: 0.1em 0.5em;
+  position: relative;
+  font-size: 1em;
+}
+
+.btn-outline-primary {
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+/* DropDown Design */
+.selected_item {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  background-color: azure;
+}
+
+#no-data-card {
+  background-color: rgb(250, 241, 241);
+  /* height: 40000%; */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+#form,
+#chart-cart {
+  border-bottom: 1px solid #e9e9e9;
+  background-color: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+#select2-id_master_project-container {
+  color: grey;
+  display: block;
+}
+
+.select2 {
+  width: 100% !important;
+  font-size: 15px;
+  font: 'Roboto';
+}
+
+#id_master_project,
+#id_project_name,
+#id_building_name,
+#id_property_type,
+#id_rooms_number {
+  color: grey;
+}
+
+option :hover {
+  background: #30cae9;
+}

@@ -1,0 +1,47 @@
+<div class="container-fluid mt-4" style="text-align: center">
+  <h1>
+    <a class="nav-link active" href="{% url 'blog' %}" rel="home" id="title-site">DuState</a>
+  </h1>
+
+  <p style="opacity: 0.7; font-size: 1.125rem">Sharing insights on Real Estate in Dubai.</p>
+</div>
+
+<nav class="navbar navbar-expand-lg bg-secondary mt-4">
+  <div class="container-fluid justify-content-center">
+    <a class="navbar-brand" href="#"></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item me-5">
+          <a class="nav-link active text-white" aria-current="page" href="{% url 'blog' %}"
+            >RECENT POSTS</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active text-white" aria-current="page" href="{% url 'index' %}"
+            >LATEST TRANSACTIONS</a
+          >
+        </li>
+      </ul>
+      <!-- <form class="d-flex" role="search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form> -->
+    </div>
+  </div>
+</nav>
