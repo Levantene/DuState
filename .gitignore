@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Env production folders
+# Папки, создаваемые средой разработки
 .idea
 .DS_Store
 .AppleDouble
@@ -144,6 +144,9 @@ dmypy.json
 .history/
 
 .mypy_cache
+
+# папки со статикой и медиа
+media/data
 
 # Others
 node_modules
