@@ -22,5 +22,5 @@ def post_one(request):
 def post_two(request):
     context = {}
     return render(request,
-                  'blog/Most_expensive_villas_in_dubai.html',
+                  'blog/most_expensive_villas_in_dubai.html',
                   context)
