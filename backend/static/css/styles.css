@@ -4,8 +4,12 @@ body {
   background-color: #eaedf4;
 }
 
+p {
+  font-size: 19px;
+}
+
 .card-title:hover,
-.img-fluid:hover,
+#img-card:hover,
 #title-site:hover {
   opacity: 0.5;
 }

@@ -2,30 +2,31 @@
 
 <div class="container mt-3">
   <div class="row mt-4">
-    <div class="col-8">
+    <div class="col-7">
       {% for post in posts %}
       <!--Post 1-->
       <div class="mb-5 border-top border-bottom border-3 pt-4 pb-4">
         <div class="card border-0" id="blog-post">
           <div class="row g-0">
             <div class="col-md-4">
-              <a href="{% url 'post_detail' post.id %}">
+              <a href="{% url 'post_one' %}">
                 <img
-                  src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src="{% static 'images/cards/Dubai_Sheikh_Zayed_Road.jpg' %}"
                   class="img-fluid rounded-start"
                   alt="..."
+                  id="img-card"
                 />
               </a>
             </div>
             <div class="col-md-8">
               <div class="card-body">
                 <h3 class="card-title">
-                  <a class="nav-link active" href="{% url 'post_detail' post.id %}"
-                    >Attract Money by Creating Value for a Specific Audience</a
+                  <a class="nav-link active" href="{% url 'post_one' %}"
+                    >Should You Invest in Real Estate in Dubai?</a
                   >
                 </h3>
                 <p class="card-text">
-                  The best way to attract money is to create value for a specific audience.
+                  On the pros and cons of investing in Dubai real estate sector.
                 </p>
                 <!-- <p class="card-text">
                 <small class="text-body-secondary">Last updated 3 mins ago</small>
@@ -40,24 +41,23 @@
         <div class="card border-0" id="blog-post">
           <div class="row g-0">
             <div class="col-md-4">
-              <a href="">
+              <a href="{% url 'post_two' %}">
                 <img
-                  src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src="{% static 'images/cards/EOMA_Villa.jpg' %}"
                   class="img-fluid rounded-start"
                   alt="..."
+                  id="img-card"
                 />
               </a>
             </div>
             <div class="col-md-8">
               <div class="card-body">
                 <h3 class="card-title">
-                  <a class="nav-link active" href=""
-                    >Attract Money by Creating Value for a Specific Audience</a
+                  <a class="nav-link active" href="{% url 'post_two' %}"
+                    >Window To Luxury: Dubai Most Expensive Villas</a
                   >
                 </h3>
-                <p class="card-text">
-                  The best way to attract money is to create value for a specific audience.
-                </p>
+                <p class="card-text">Spotlight on Most Expensive Villas in Palm Jumeirah.</p>
                 <!-- <p class="card-text">
                 <small class="text-body-secondary">Last updated 3 mins ago</small>
               </p> -->
@@ -66,6 +66,7 @@
           </div>
         </div>
       </div>
+
       <!--Post 3-->
       <div class="mb-5 border-top border-bottom border-3 pt-4 pb-4">
         <div class="card border-0" id="blog-post">
@@ -100,7 +101,7 @@
       {% endfor %}
       <!--POST ENDS-->
     </div>
-    <div class="col-4">
+    <div class="col-5">
       <div class="mb-5 border-top border-bottom border-3 pt-4 pb-4">
         <h5 class="ps-3">ABOUT</h5>
         <p class="mt-3 ps-3">
