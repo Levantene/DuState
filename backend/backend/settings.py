@@ -12,7 +12,7 @@ SECRET_KEY = 'django-insecure-d^av7ca0gp0#(@^*@4lhs&%^8^sma=*s--t**cc77yxk!8!1b2
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['levantene.pythonanywhere.com']
+ALLOWED_HOSTS = ['levantene.pythonanywhere.com', 'www.dxbstates.com']
 
 
 # Application definition
