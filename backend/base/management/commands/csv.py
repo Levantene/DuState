@@ -1,6 +1,6 @@
 import os
 import csv
-import sys
+from pathlib import Path
 
 from django.core.management.base import BaseCommand
 
@@ -16,12 +16,14 @@ from base.models import (
     PropertyUsage,
     RegistrationType
 )
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 
 def read_csv(name):
     reader = csv.reader(open(
         os.path.join(
-            'C:/Users/tenielev/1_IT/3_Pet_Projects/3_DuState/dustate/backend/static',
+            STATICFILES_DIRS,
             'data',
             name),
         'r', encoding='utf-8'), delimiter=',')
