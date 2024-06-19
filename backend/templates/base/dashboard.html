@@ -26,40 +26,39 @@
         </div>
       </div>
 
-      <div class="col-md-9">
+      <div class="col-md-9 align-items-stretch">
         <div id="no-data"></div>
         <div id="available-data">
-          <div class="container" id="bar-chart">
-            <div class="card">
-              <div class="card-body pb-5">
-                <div class="row mb-3">
-                  <div class="col-6">
-                    <div id="charts-title">
-                      <p class="h6" id="title_bar">Last 10 transactions in Dubai</p>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div id="dialog_community" title="Please choose a Community">
-                      Please select a Community name in the left search bar
-                    </div>
-                    <div id="dialog_project" title="Please choose a Project Name">
-                      Please select a Project name in the left search bar
-                    </div>
-                    <div id="dialog_type" title="Please choose a Property Type">
-                      Please select a Property type in the left search bar
-                    </div>
-                    <div class="container text-end">
-                      <a
-                        href="{% url 'all-transactions' %}"
-                        class="btn btn-primary"
-                        id="all_transactions_button"
-                      >
-                        <p class="h6">See all transactions >>></p>
-                      </a>
-                    </div>
+          <div class="card" id="bar-chart">
+            <div class="card-body">
+              <div class="row mb-md-3">
+                <div class="col-6">
+                  <div id="charts-title">
+                    <p class="h6" id="title_bar">Last 10 transactions in Dubai</p>
                   </div>
                 </div>
-
+                <div class="col-6">
+                  <div id="dialog_community" title="Please choose a Community">
+                    Please select a Community name in the left search bar
+                  </div>
+                  <div id="dialog_project" title="Please choose a Project Name">
+                    Please select a Project name in the left search bar
+                  </div>
+                  <div id="dialog_type" title="Please choose a Property Type">
+                    Please select a Property type in the left search bar
+                  </div>
+                  <div class="container text-end">
+                    <a
+                      href="{% url 'all-transactions' %}"
+                      class="btn btn-primary"
+                      id="all_transactions_button"
+                    >
+                      <p class="h6">See all transactions >>></p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="chart-container">
                 <canvas id="myChartbar"></canvas>
               </div>
             </div>
