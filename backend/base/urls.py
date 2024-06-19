@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 from base.views import ajax_view
@@ -7,7 +7,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('line_data/', views.line_data, name='line-data'),
     path('bar_data/', views.bar_data, name='bar-data'),
-    path(r'^ajax/$', ajax_view.as_view(), name='ajax_url'),
+    re_path(r'^ajax/$', ajax_view.as_view(), name='ajax_url'),
     path('load_project_names/',
          views.load_project_names,
          name='load_project_names'),

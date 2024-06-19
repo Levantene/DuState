@@ -5,26 +5,28 @@
 <div style="margin-top: 5rem">
   <div class="container mt-5">
     <div class="row">
-      <div class="col-3">
-        <form id="form" method="GET" class="border p-3 sticky-top">
-          <div class="container mb-3" id="charts-title">
-            <i class="fa fa-home" aria-hidden="true" id="home-icon"></i>
-            Choose attributes
-            <i
-              class="fa fa-refresh"
-              aria-hidden="true"
-              id="refresh-icon"
-              onclick="refreshFilters()"
-            ></i>
-          </div>
-          {% csrf_token %} {% for form_item in form %}
-          <div>{{ form_item }}</div>
-          <br />
-          {% endfor %}
-        </form>
+      <div class="col-md-3">
+        <div class="container mb-3">
+          <form id="form" method="GET" class="border p-3 sticky-top">
+            <div class="container mb-3" id="charts-title">
+              <i class="fa fa-home" aria-hidden="true" id="home-icon"></i>
+              Choose attributes
+              <i
+                class="fa fa-refresh"
+                aria-hidden="true"
+                id="refresh-icon"
+                onclick="refreshFilters()"
+              ></i>
+            </div>
+            {% csrf_token %} {% for form_item in form %}
+            <div>{{ form_item }}</div>
+            <br />
+            {% endfor %}
+          </form>
+        </div>
       </div>
 
-      <div class="col-9">
+      <div class="col-md-9">
         <div id="no-data"></div>
         <div id="available-data">
           <div class="container" id="bar-chart">
@@ -32,8 +34,8 @@
               <div class="card-body pb-5">
                 <div class="row mb-3">
                   <div class="col-6">
-                    <div class="container" id="charts-title">
-                      <p class="text-start" id="title_bar">Last 10 transactions in Dubai</p>
+                    <div id="charts-title">
+                      <p class="h6" id="title_bar">Last 10 transactions in Dubai</p>
                     </div>
                   </div>
                   <div class="col-6">
@@ -52,7 +54,7 @@
                         class="btn btn-primary"
                         id="all_transactions_button"
                       >
-                        See all transactions >>>
+                        <p class="h6">See all transactions >>></p>
                       </a>
                     </div>
                   </div>
@@ -67,13 +69,13 @@
         Price for {sqm} dynamics for {last year}
       </div> -->
 
-          <div class="container mt-5 mb-5 pe-3" id="line-chart">
+          <div class="container mt-3 mb-5 pe-3" id="line-chart">
             <div class="card">
               <div class="card-body pb-5">
                 <div class="row mb-3">
                   <div class="col-8">
-                    <div class="container" id="charts-title">
-                      <p class="text-start">Price/sqm dynamics (AED)</p>
+                    <div id="charts-title">
+                      <p class="h6">Price/sqm dynamics (AED)</p>
                     </div>
                   </div>
                   <div class="col-4">
