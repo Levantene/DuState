@@ -457,29 +457,29 @@
         const ctx = document.getElementById(id).getContext('2d')
 
         const bar = new Chart(ctx, {
-          plugins: [
-            [ChartDataLabels],
-            {
-              beforeInit: function (chart, options) {
-                const originalFit = chart.legend.fit
-                chart.legend.fit = function fit() {
-                  originalFit.bind(chart.legend)()
-                  this.height += 35
-                }
-              },
-            },
+          // plugins: [
+          //   [ChartDataLabels],
+          //   {
+          //     beforeInit: function (chart, options) {
+          //       const originalFit = chart.legend.fit
+          //       chart.legend.fit = function fit() {
+          //         originalFit.bind(chart.legend)()
+          //         this.height += 35
+          //       }
+          //     },
+          //   },
 
-            {
-              beforeInit: function (chart) {
-                chart.data.labels.forEach(function (e, i, a) {
-                  const reWhiteSpace = new RegExp(' ')
-                  if (reWhiteSpace.test(e)) {
-                    a[i] = e.split(' ')
-                  }
-                })
-              },
-            },
-          ],
+          //   {
+          //     beforeInit: function (chart) {
+          //       chart.data.labels.forEach(function (e, i, a) {
+          //         const reWhiteSpace = new RegExp(' ')
+          //         if (reWhiteSpace.test(e)) {
+          //           a[i] = e.split(' ')
+          //         }
+          //       })
+          //     },
+          //   },
+          // ],
           type: 'bar',
           data: {
             labels: labels,
