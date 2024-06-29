@@ -454,32 +454,41 @@
           return label
         }
 
+        const footer = (tooltipItems) => {
+          let project_names = data.project_names
+
+          tooltipItems.forEach(function (tooltipItem) {
+            project_name = project_names[tooltipItem.dataIndex]
+          })
+          return `${project_name}`
+        }
+
         const ctx = document.getElementById(id).getContext('2d')
 
         const bar = new Chart(ctx, {
-          // plugins: [
-          //   [ChartDataLabels],
-          //   {
-          //     beforeInit: function (chart, options) {
-          //       const originalFit = chart.legend.fit
-          //       chart.legend.fit = function fit() {
-          //         originalFit.bind(chart.legend)()
-          //         this.height += 35
-          //       }
-          //     },
-          //   },
+          plugins: [
+            [ChartDataLabels],
+            {
+              beforeInit: function (chart, options) {
+                const originalFit = chart.legend.fit
+                chart.legend.fit = function fit() {
+                  originalFit.bind(chart.legend)()
+                  this.height += 25
+                }
+              },
+            },
 
-          //   {
-          //     beforeInit: function (chart) {
-          //       chart.data.labels.forEach(function (e, i, a) {
-          //         const reWhiteSpace = new RegExp(' ')
-          //         if (reWhiteSpace.test(e)) {
-          //           a[i] = e.split(' ')
-          //         }
-          //       })
-          //     },
-          //   },
-          // ],
+            {
+              beforeInit: function (chart) {
+                chart.data.labels.forEach(function (e, i, a) {
+                  const reWhiteSpace = new RegExp(' ')
+                  if (reWhiteSpace.test(e)) {
+                    a[i] = e.split(' ')
+                  }
+                })
+              },
+            },
+          ],
           type: 'bar',
           data: {
             labels: labels,
@@ -530,6 +539,7 @@
                 titleColor: 'green',
                 callbacks: {
                   title: footer_title,
+                  footer: footer,
                 },
               },
             },
