@@ -60,7 +60,7 @@ p {
 
 @media only screen and (max-width: 450px) {
   #all_transactions_button{
-    font-size: 0.8em;
+    font-size: 0.7em;
   }
   
   .card-body {
