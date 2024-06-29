@@ -47,9 +47,7 @@
       const footer = (tooltipItems) => {
         let transactions_numbers = data.transactions_number
         tooltipItems.forEach(function (tooltipItem) {
-          transactions_number = transactions_numbers[tooltipItem.dataIndex]
-            .toFixed(0)
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+          transactions_number = transactions_numbers[tooltipItem.dataIndex].toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         })
         return `# of Transactions: ${transactions_number}`
       }
@@ -192,7 +190,11 @@
         withCredentials: true,
       },
       success: function (data) {
-        selectedBar = drawBarGraph(data, 'myChartbar')
+        if (window.innerWidth > 450) {
+          selectedBar = drawBarGraph(data, 'myChartbar')
+        } else {
+          selectedBar = drawMobileBarGraph(data, 'myChartbar')
+        }
       },
       error: function (error_data) {
         console.log(error_data)
@@ -375,7 +377,7 @@
             },
 
             layout: {
-              // responsive: true,
+              responsive: true,
               maintainAspectRatio: false,
             },
 
@@ -417,6 +419,145 @@
                   family: 'Roboto',
                 },
                 color: 'light grey',
+              },
+            },
+          },
+        })
+        return bar
+      }
+    }
+
+    function drawMobileBarGraph(data, id) {
+      const yesData = document.getElementById('available-data')
+      const noData = document.getElementById('no-data')
+      if (data.building_names.length === 0) {
+        yesData.style.display = 'none'
+        noData.style.display = 'block'
+
+        noData.innerHTML =
+          '<div class="container"><div class="card"><div class="card-body" id="no-data-card"><p class="text-start pd-5">We currently have no properties matching your search. You could try the following Change the location</p></div></div></div>'
+      } else {
+        noData.style.display = 'none'
+        yesData.style.display = 'block'
+
+        let labels = data.project_names
+        let chartLabel = 'Transaction Price (AED mn)'
+        let chartdata = data.prices.map((price) => (price / 1000000).toFixed(1))
+
+        const footer_title = (tooltipItem) => {
+          label = tooltipItem[0].label
+          const reWhiteSpace = new RegExp(', ')
+          if (reWhiteSpace.test(label)) {
+            label = label.split(', ')
+          }
+          label = label.split(',').join(' ')
+          return label
+        }
+
+        const ctx = document.getElementById(id).getContext('2d')
+
+        const bar = new Chart(ctx, {
+          plugins: [
+            [ChartDataLabels],
+            {
+              beforeInit: function (chart, options) {
+                const originalFit = chart.legend.fit
+                chart.legend.fit = function fit() {
+                  originalFit.bind(chart.legend)()
+                  this.height += 35
+                }
+              },
+            },
+
+            {
+              beforeInit: function (chart) {
+                chart.data.labels.forEach(function (e, i, a) {
+                  const reWhiteSpace = new RegExp(' ')
+                  if (reWhiteSpace.test(e)) {
+                    a[i] = e.split(' ')
+                  }
+                })
+              },
+            },
+          ],
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                datalabels: {
+                  anchor: 'end',
+                  align: 'top',
+                  font: 'Roboto',
+                  size: 7,
+                  formatter: function (value, context) {
+                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                  },
+                },
+                label: chartLabel,
+                // backgroundColor: 'rgb(255, 100, 200)',
+                // borderColor: 'rgb(55, 99, 132)',
+                data: chartdata,
+                borderRadius: 5,
+                barPercentage: 0.7,
+                hoverBackgroundColor: 'green',
+              },
+            ],
+          },
+
+          // Configuration options go here
+          options: {
+            plugins: {
+              legend: {
+                position: 'top',
+                align: 'start',
+                // maxSize: {
+                //   height: 200,
+                // },
+
+                labels: {
+                  font: {
+                    size: 10,
+                    family: 'Roboto',
+                  },
+                  boxWidth: 25,
+                  useBorderRadius: true,
+                  borderRadius: 4,
+                },
+              },
+
+              tooltip: {
+                titleColor: 'green',
+                callbacks: {
+                  title: footer_title,
+                },
+              },
+            },
+
+            layout: {
+              responsive: true,
+              maintainAspectRatio: false,
+            },
+
+            scales: {
+              x: {
+                grid: {
+                  display: false,
+                },
+                ticks: {
+                  display: false,
+                },
+              },
+              y: {
+                grid: {
+                  display: false,
+                },
+                ticks: {
+                  display: false,
+                },
+                border: {
+                  display: false,
+                },
               },
             },
           },

@@ -11,12 +11,7 @@
             <div class="container mb-3" id="charts-title">
               <i class="fa fa-home" aria-hidden="true" id="home-icon"></i>
               Choose attributes
-              <i
-                class="fa fa-refresh"
-                aria-hidden="true"
-                id="refresh-icon"
-                onclick="refreshFilters()"
-              ></i>
+              <i class="fa fa-refresh" aria-hidden="true" id="refresh-icon" onclick="refreshFilters()"></i>
             </div>
             {% csrf_token %} {% for form_item in form %}
             <div>{{ form_item }}</div>
@@ -29,61 +24,44 @@
       <div class="col-md-9 align-items-stretch">
         <div id="no-data"></div>
         <div id="available-data">
-          <div class="card" id="bar-chart">
-            <div class="card-body">
-              <div class="row mb-md-3">
-                <div class="col-6">
+          <!-- Bar Chart -->
+          <div class="container" id="bar-chart">
+            <div class="card shadow p-3 bg-white rounded">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
                   <div id="charts-title">
                     <p class="h6" id="title_bar">Last 10 transactions in Dubai</p>
                   </div>
-                </div>
-                <div class="col-6">
-                  <div id="dialog_community" title="Please choose a Community">
-                    Please select a Community name in the left search bar
-                  </div>
-                  <div id="dialog_project" title="Please choose a Project Name">
-                    Please select a Project name in the left search bar
-                  </div>
-                  <div id="dialog_type" title="Please choose a Property Type">
-                    Please select a Property type in the left search bar
-                  </div>
+                  <div id="dialog_community" title="Please choose a Community">Please select a Community name in the left search bar</div>
+                  <div id="dialog_project" title="Please choose a Project Name">Please select a Project name in the left search bar</div>
+                  <div id="dialog_type" title="Please choose a Property Type">Please select a Property type in the left search bar</div>
                   <div class="container text-end">
-                    <a
-                      href="{% url 'all-transactions' %}"
-                      class="btn btn-primary"
-                      id="all_transactions_button"
-                    >
+                    <a href="{% url 'all-transactions' %}" class="btn btn-primary" id="all_transactions_button">
                       <p class="h6">See all transactions >>></p>
                     </a>
                   </div>
                 </div>
-              </div>
-              <div class="chart-container">
+                <!-- <div>
+                  <div class="chart-container"> -->
                 <canvas id="myChartbar"></canvas>
+                <!-- </div>
+                </div> -->
               </div>
             </div>
           </div>
-
-          <!-- <div class="container mt-3" id="charts-title">
-        Price for {sqm} dynamics for {last year}
-      </div> -->
-
-          <div class="container mt-3 mb-5 pe-3" id="line-chart">
-            <div class="card">
+          <!-- Line Chart -->
+          <div class="container mt-3 mb-3" id="line-chart">
+            <div class="card shadow p-3 mb-5 bg-white rounded">
               <div class="card-body pb-5">
                 <div class="row mb-3">
-                  <div class="col-8">
+                  <div class="col-6">
                     <div id="charts-title">
                       <p class="h6">Price/sqm dynamics (AED)</p>
                     </div>
                   </div>
-                  <div class="col-4">
+                  <div class="col-6">
                     <div class="container">
-                      <select
-                        id="time_period_form"
-                        class="form-select form-select-sm"
-                        onchange="getTimePeriod()"
-                      >
+                      <select id="time_period_form" class="form-select form-select-sm" onchange="getTimePeriod()">
                         <option selected value="1Y">Last 1 year</option>
                         <option value="YTD" id="YTD">YTD</option>
                         <option value="5Y" id="5Y">Last 5 years</option>
@@ -92,7 +70,6 @@
                     </div>
                   </div>
                 </div>
-
                 <canvas id="myChartline"></canvas>
               </div>
             </div>
@@ -223,7 +200,7 @@
     if (url.searchParams.size === 0) {
       $.ajax({
         method: 'GET',
-        url: 'https://www.dxbstates.com/',
+        url: 'https://dxbstate.com/',
         data: {
           master_project: null,
           project_name: null,
@@ -265,15 +242,15 @@
         }),
       })
 
-      if (selectedChart) {
-        selectedChart.destroy()
-      }
-      if (selectedBar) {
-        selectedBar.destroy()
-      }
+      // if (selectedChart) {
+      //   selectedChart.destroy()
+      // }
+      // if (selectedBar) {
+      //   selectedBar.destroy()
+      // }
 
-      load_graph_data()
-      load_bar_data()
+      // load_graph_data()
+      // load_bar_data()
     }
   }
 
@@ -314,7 +291,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/',
+      url: 'https://dxbstate.com/',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -389,7 +366,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/',
+      url: 'https://dxbstate.com/',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -458,7 +435,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/',
+      url: 'https://dxbstate.com/',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -531,7 +508,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/',
+      url: 'https://dxbstate.com/',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -598,7 +575,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/',
+      url: 'https://dxbstate.com/',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -665,7 +642,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/',
+      url: 'https://dxbstate.com/',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -719,4 +696,7 @@
   }
 </script>
 
-{% include 'base/chart.html' %} {% endblock content %}
+<!-- Charts Web Version -->
+{% include 'base/chart.html' %}
+<!-- Charts Mobile Version -->
+{% endblock content %}
