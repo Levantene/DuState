@@ -440,7 +440,7 @@
         noData.style.display = 'none'
         yesData.style.display = 'block'
 
-        let labels = data.project_names
+        let labels = data.dates
         let chartLabel = 'Transaction Price (AED mn)'
         let chartdata = data.prices.map((price) => (price / 1000000).toFixed(1))
 
@@ -545,7 +545,20 @@
                   display: false,
                 },
                 ticks: {
-                  display: false,
+                  font: {
+                    size: 10,
+                    family: 'Roboto',
+                  },
+                  callback: (value, index, values) => {
+                    dates = data.dates
+                    month_year = dates.map((date) => {
+                      date = new Date(date)
+                      year = date.getFullYear().toString().substr(-2)
+                      month = monthHash[date.getMonth()]
+                      return `${month}-${year}`
+                    })
+                    return `${month_year[index]}`
+                  },
                 },
               },
               y: {

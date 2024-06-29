@@ -59,6 +59,10 @@ p {
 } */
 
 @media only screen and (max-width: 450px) {
+  #all_transactions_button{
+    font-size: 0.8em;
+  }
+  
   .card-body {
     height: 300px;
   }
