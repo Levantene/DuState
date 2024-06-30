@@ -51,18 +51,18 @@
           </div>
           <!-- Line Chart -->
           <div class="container mt-3 mb-3" id="line-chart">
-            <div class="card shadow mb-5 bg-white rounded">
-              <div class="card-body pb-5">
+            <div class="card shadow bg-white rounded">
+              <div class="card-body">
                 <div class="row mb-3">
                   <div class="col-6">
                     <div id="charts-title">
-                      <p class="h6">Price/sqm dynamics (AED)</p>
+                      <p class="h6">Price/sqm dynamics</p>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="container">
                       <select id="time_period_form" class="form-select form-select-sm" onchange="getTimePeriod()">
-                        <option selected value="1Y">Last 1 year</option>
+                        <option selected value="1Y" id="1Y">Last 1 year</option>
                         <option value="YTD" id="YTD">YTD</option>
                         <option value="5Y" id="5Y">Last 5 years</option>
                         <option value="All" id="All">All</option>
@@ -70,7 +70,7 @@
                     </div>
                   </div>
                 </div>
-                <canvas id="myChartline"></canvas>
+                <canvas class="mt-4" id="myChartline"></canvas>
               </div>
             </div>
           </div>

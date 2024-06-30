@@ -26,7 +26,11 @@
         withCredentials: true,
       },
       success: function (data) {
-        selectedChart = drawLineGraph(data, 'myChartline')
+        if (window.innerWidth > 450) {
+          selectedChart = drawLineGraph(data, 'myChartline')
+        } else {
+          selectedChart = drawMobileLineGraph(data, 'myChartline')
+        }
       },
       error: function (error_data) {
         console.log(error_data)
@@ -174,6 +178,146 @@
                 family: 'Roboto',
               },
               color: 'light grey',
+            },
+          },
+        },
+      })
+      return chart
+    }
+
+    function drawMobileLineGraph(data, id) {
+      let labels = data.dates
+      let chartLabel = "Price/sqm (AED '000)"
+      let chartdata = data.prices_per_sqm.map((price) => (price / 1000).toFixed(0))
+
+      // const footer_label = (tooltipItem) => {
+      //   label = tooltipItem.formattedValue
+      //   console.log(label)
+      //   return label
+      // }
+
+      const footer = (tooltipItems) => {
+        let transactions_numbers = data.transactions_number
+        tooltipItems.forEach(function (tooltipItem) {
+          transactions_number = transactions_numbers[tooltipItem.dataIndex].toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        })
+        return `# of Transactions: ${transactions_number}`
+      }
+
+      const ctx = document.getElementById(id).getContext('2d')
+      const chart = new Chart(ctx, {
+        plugins: [
+          [ChartDataLabels],
+          {
+            beforeInit: function (chart, options) {
+              const originalFit = chart.legend.fit
+              chart.legend.fit = function fit() {
+                originalFit.bind(chart.legend)()
+                this.height += 25
+              }
+            },
+          },
+        ],
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              datalabels: {
+                anchor: 'end',
+                align: 'top',
+                font: 'Roboto',
+                size: 8,
+              },
+              label: chartLabel,
+              data: chartdata,
+              hoverBackgroundColor: 'green',
+            },
+          ],
+        },
+
+        // Configuration options go here
+        options: {
+          borderWidth: 1,
+          hoverBackgroundColor: 'green',
+          elements: {
+            line: {
+              tension: 0.2, // smooth lines
+            },
+            point: {
+              radius: 3,
+            },
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'start',
+              maxSize: {
+                height: 200,
+              },
+              margin: 10,
+
+              labels: {
+                // padding: 50,
+                // This more specific font property overrides the global property
+                font: {
+                  size: 10,
+                  family: 'Roboto',
+                },
+              },
+            },
+            tooltip: {
+              titleColor: 'green',
+              callbacks: {
+                // label: footer_label,
+                footer: footer,
+              },
+            },
+          },
+
+          layout: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+
+          scales: {
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                font: {
+                  size: 10,
+                  family: 'Roboto',
+                },
+                // callback: (value, index, values) => {
+                //   dates = data.dates
+                //   month_year = dates.map((date) => {
+                //     date = new Date(date)
+                //     year = date.getFullYear().toString().substr(-2)
+                //     month = monthHash[date.getMonth()]
+                //     return `${month}-${year}`
+                //   })
+                //   return `${month_year[index]}`
+                // },
+              },
+              // type: 'time',
+              // time: {
+              //   unit: 'day',
+              //   // parser: 'yyyy-mm-dd',
+              // },
+            },
+
+            y: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                display: false,
+              },
+              border: {
+                display: false,
+              },
             },
           },
         },
@@ -498,7 +642,7 @@
                   anchor: 'end',
                   align: 'top',
                   font: 'Roboto',
-                  size: 7,
+                  size: 8,
                   formatter: function (value, context) {
                     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   },
