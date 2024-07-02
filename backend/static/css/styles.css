@@ -59,6 +59,9 @@ p {
 } */
 
 @media only screen and (max-width: 450px) {
+  #blog_about {
+    display: none;
+  }
   #all_transactions_button {
     font-size: 0.8em;
   }

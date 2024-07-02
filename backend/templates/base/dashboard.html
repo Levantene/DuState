@@ -131,9 +131,12 @@
   mousePointer()
 
   function refreshFilters() {
-    location.reload()
+    let url = new URL(window.location.href)
+    window.location.href = url.origin + url.pathname
   }
-  window.history.replaceState(null, '', '/')
+  // let url = new URL(window.location.href)
+  // windows.location.raplace(url.origin + url.pathname)
+  window.history.replaceState(null, '', '/latest_transactions/')
 
   // Button with alerts
 
@@ -200,7 +203,7 @@
     if (url.searchParams.size === 0) {
       $.ajax({
         method: 'GET',
-        url: 'https://www.dxbstates.com',
+        url: 'https://www.dxbstates.com/latest_transactions',
         data: {
           master_project: null,
           project_name: null,
@@ -291,7 +294,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com',
+      url: 'https://www.dxbstates.com/latest_transactions',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -366,7 +369,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com',
+      url: 'https://www.dxbstates.com/latest_transactions',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -435,7 +438,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com',
+      url: 'https://www.dxbstates.com/latest_transactions',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -508,7 +511,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com',
+      url: 'https://www.dxbstates.com/latest_transactions',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -575,7 +578,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com',
+      url: 'https://www.dxbstates.com/latest_transactions',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
@@ -642,7 +645,7 @@
 
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com',
+      url: 'https://www.dxbstates.com/latest_transactions',
       data: {
         master_project: selectedMasterProject,
         project_name: selectedProjectName,
