@@ -16,8 +16,8 @@ from base.models import (
     PropertyUsage,
     RegistrationType
 )
-BASE_DIR = Path(__file__).resolve().parent.parent
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = "/home/levantene/DuState/backend/static/"
 
 
 def read_csv(name):
@@ -115,7 +115,4 @@ class Command(BaseCommand):
                         name=row[18]),
                 )
             print(trans_id)
-            # Upload first 50000 transactions
-            # if trans_id == 50000:
-            #     break
             trans_id += 1
