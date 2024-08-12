@@ -120,7 +120,7 @@ function getHomePage() {
   if (url.searchParams.size === 0) {
     $.ajax({
       method: 'GET',
-      url: 'https://www.dxbstates.com/latest_transactions',
+      url: 'http://127.0.0.1:8000/latest_transactions',
       data: {
         master_project: null,
         project_name: null,
@@ -211,7 +211,7 @@ function getProjectName() {
 
   $.ajax({
     method: 'GET',
-    url: 'https://www.dxbstates.com/latest_transactions',
+    url: 'http://127.0.0.1:8000/latest_transactions',
     data: {
       master_project: selectedMasterProject,
       project_name: selectedProjectName,
@@ -286,7 +286,7 @@ function getBuildingName() {
 
   $.ajax({
     method: 'GET',
-    url: 'https://www.dxbstates.com/latest_transactions',
+    url: 'http://127.0.0.1:8000/latest_transactions',
     data: {
       master_project: selectedMasterProject,
       project_name: selectedProjectName,
@@ -355,7 +355,7 @@ function listBuildingName() {
 
   $.ajax({
     method: 'GET',
-    url: 'https://www.dxbstates.com/latest_transactions',
+    url: 'http://127.0.0.1:8000/latest_transactions',
     data: {
       master_project: selectedMasterProject,
       project_name: selectedProjectName,
@@ -428,7 +428,7 @@ function getRoomsNumber() {
 
   $.ajax({
     method: 'GET',
-    url: 'https://www.dxbstates.com/latest_transactions',
+    url: 'http://127.0.0.1:8000/latest_transactions',
     data: {
       master_project: selectedMasterProject,
       project_name: selectedProjectName,
@@ -495,7 +495,7 @@ function listRoomsNumber() {
 
   $.ajax({
     method: 'GET',
-    url: 'https://www.dxbstates.com/latest_transactions',
+    url: 'http://127.0.0.1:8000/latest_transactions',
     data: {
       master_project: selectedMasterProject,
       project_name: selectedProjectName,
@@ -562,7 +562,7 @@ function getTimePeriod() {
 
   $.ajax({
     method: 'GET',
-    url: 'https://www.dxbstates.com/latest_transactions',
+    url: 'http://127.0.0.1:8000/latest_transactions',
     data: {
       master_project: selectedMasterProject,
       project_name: selectedProjectName,

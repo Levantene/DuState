@@ -12,4 +12,8 @@ urlpatterns = [
     path('most_expensive_villas_in_dubai/',
          views.post_two,
          name='post_two'),
+    path('best_areas_for_investment_in_dubai/',
+         views.post_three,
+         name='post_three'),
+
 ]

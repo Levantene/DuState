@@ -24,3 +24,10 @@ def post_two(request):
     return render(request,
                   'blog/most_expensive_villas_in_dubai.html',
                   context)
+
+
+def post_three(request):
+    context = {}
+    return render(request,
+                  'blog/best_areas_for_investment_in_dubai.html',
+                  context)
