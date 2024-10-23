@@ -17,7 +17,7 @@ from base.models import (
     RegistrationType
 )
 # BASE_DIR = Path(__file__).resolve().parent.parent
-STATICFILES_DIRS = "/home/levantene/DuState/backend/static/"
+STATICFILES_DIRS = "/home/levantene/dxbstates/backend/static/"
 
 
 def read_csv(name):
