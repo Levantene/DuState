@@ -1,9 +1,14 @@
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lato', sans-serif;
   padding: 0;
   background-color: #eaedf4;
 }
 
+#blog,
+#categories,
+#blog-post {
+  background-color: #fefeff;
+}
 p {
   font-size: 19px;
 }
@@ -16,11 +21,6 @@ p {
 
 #navbarSupportedContent ul li a:hover {
   opacity: 0.5;
-}
-
-#categories,
-#blog-post {
-  background-color: #eaedf4;
 }
 
 .border {
