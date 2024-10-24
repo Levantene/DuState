@@ -116,3 +116,6 @@ class Command(BaseCommand):
                 )
             print(trans_id)
             trans_id += 1
+        print('-----------------------------------------')
+        print('THE DATA IS UPLOADED')
+        print('-----------------------------------------')
