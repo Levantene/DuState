@@ -68,7 +68,7 @@ class Command(BaseCommand):
 
             RealEstate.objects.get_or_create(
                 transaction_id=row[1],
-                transaction_date=f'{date[2]}-{date[1]}-{date[0]}',
+                transaction_date=f'{date[0]}-{date[1]}-{date[2]}',
                 building_name=BuildingName.objects.get(name=row[24]),
                 object_price=row[40],
                 object_size=row[39],
