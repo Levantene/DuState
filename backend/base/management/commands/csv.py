@@ -85,8 +85,8 @@ class Command(BaseCommand):
                 registration_type=RegistrationType.objects.get(
                     name=row[19]),
             )
-        print(trans_id)
-        trans_id += 1
+            print(trans_id)
+            trans_id += 1
         print('-----------------------------------------')
         print('THE DATA IS UPLOADED')
         print('-----------------------------------------')
